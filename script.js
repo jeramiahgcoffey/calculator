@@ -20,7 +20,7 @@ function roundToSix(num) {
     return +(Math.round(num + "e+6") + "e-6");
 }
 
-const operate = function (num1, num2, operator) {
+const evaluate = function (num1, num2, operator) {
     num1 = Number(num1);
     num2 = Number(num2);
     switch (operator) {
@@ -38,9 +38,17 @@ const operate = function (num1, num2, operator) {
 };
 /*****************************************/
 
+const toExpo = function (num) {
+    return Number.parseFloat(num).toExponential(4);
+};
+
 const updateDisplay = function (value) {
     const display = document.getElementById("display");
-    display.textContent = value;
+    if (value.length > 10) {
+        display.textContent = toExpo(value);
+    } else {
+        display.textContent = value;
+    }
 };
 
 /********** GLOBAL VARIABLES **********/
@@ -74,13 +82,16 @@ const handleNumberInput = function (e) {
 };
 
 const handleOperatorInput = function (e) {
+    if (operator) {
+        handleEquate();
+    }
     operator = e.target.value;
     inputFinished = true;
 };
 
 const handleEquate = function () {
     if (operator) {
-        displayValue = operate(storedValue, displayValue, operator);
+        displayValue = evaluate(storedValue, displayValue, operator);
         updateDisplay(displayValue);
         operator = null;
         inputFinished = true;
@@ -99,6 +110,17 @@ const handleClear = function () {
     displayValue = "0";
     updateDisplay(displayValue);
 };
+
+const handleNegate = function () {
+    if (displayValue != "0") {
+        if (!displayValue.includes("-")) {
+            displayValue = "-" + displayValue;
+        } else {
+            displayValue = displayValue.split("-").join("");
+        }
+    }
+    updateDisplay(displayValue);
+};
 /*****************************************/
 
 /********** ADD EVENT LISTENERS **********/
@@ -109,6 +131,7 @@ const operatorButtons = Array.from(
 const equateButton = document.querySelector("#equate button");
 const allClearButton = document.querySelector("#clear-all button");
 const clearButton = document.querySelector("#clear button");
+const negateButton = document.querySelector("#negate button");
 
 for (button in numberButtons) {
     numberButtons[button].addEventListener("click", handleNumberInput);
@@ -121,4 +144,5 @@ for (button in operatorButtons) {
 equateButton.addEventListener("click", handleEquate);
 allClearButton.addEventListener("click", handleAllClear);
 clearButton.addEventListener("click", handleClear);
+negateButton.addEventListener("click", handleNegate);
 /****************************************/
