@@ -2,15 +2,15 @@
 *::before,
 *::after {
     box-sizing: border-box;
-    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 body {
     background-color: beige;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
 #flex-container {
-    height: 100vh;
+    height: 95vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -20,9 +20,11 @@ body {
     background-color: silver;
     display: grid;
     width: 300px;
-    padding: 5px;
+    padding: 20px 10px 10px 10px;
+    border: 1px solid black;
+    border-radius: 15px;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-rows: 1.5fr repeat(5, 1fr);
     grid-gap: 5px;
 }
 
@@ -74,6 +76,9 @@ button {
     font-size: 52px;
     background-color: rgb(236, 236, 236);
     padding: 0 10px;
+    margin-bottom: 15px;
+    border: 1px solid black;
+    border-radius: 10px;
 }
 
 #clear-all {
