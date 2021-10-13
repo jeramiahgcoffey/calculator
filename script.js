@@ -59,7 +59,12 @@ let operator = null;
 
 /********** EVENT HANDLERS **********/
 const handleNumberInput = function (e) {
-    const inputValue = e.target.value;
+    let inputValue;
+    if (e instanceof KeyboardEvent) {
+        inputValue = e.key;
+    } else {
+        inputValue = e.target.value;
+    }
     if (inputFinished) {
         storedValue = displayValue;
         displayValue = "0";
@@ -83,17 +88,26 @@ const handleNumberInput = function (e) {
 
 const handleOperatorInput = function (e) {
     if (operator) {
+        console.log(operator);
         handleEquate();
     }
-    operator = e.target.value;
+    if (e instanceof KeyboardEvent) {
+        if (e.key == "Enter") {
+            operator = "=";
+        } else {
+            operator = e.key;
+        }
+    } else {
+        operator = e.target.value;
+    }
     inputFinished = true;
 };
 
 const handleEquate = function () {
     if (operator) {
         displayValue = evaluate(storedValue, displayValue, operator);
-        updateDisplay(displayValue);
         operator = null;
+        updateDisplay(displayValue);
         inputFinished = true;
     }
 };
@@ -112,6 +126,7 @@ const handleClear = function () {
 };
 
 const handleNegate = function () {
+    displayValue = String(displayValue);
     if (displayValue != "0") {
         if (!displayValue.includes("-")) {
             displayValue = "-" + displayValue;
@@ -120,6 +135,33 @@ const handleNegate = function () {
         }
     }
     updateDisplay(displayValue);
+};
+
+const handleKeyBoardEvent = function (e) {
+    console.log(e.key);
+    if (e.key >= 0 && e.key <= 9) {
+        e.preventDefault();
+        handleNumberInput(e);
+    } else if (
+        e.key == "+" ||
+        e.key == "-" ||
+        e.key == "/" ||
+        e.key == "*" ||
+        e.key == "=" ||
+        e.key == "Enter"
+    ) {
+        e.preventDefault();
+        handleOperatorInput(e);
+    } else if (e.key == "Escape") {
+        e.preventDefault();
+        handleAllClear();
+    } else if (e.key == "Backspace") {
+        e.preventDefault();
+        handleClear();
+    } else if (e.key == "n") {
+        e.preventDefault();
+        handleNegate();
+    }
 };
 /*****************************************/
 
@@ -145,4 +187,5 @@ equateButton.addEventListener("click", handleEquate);
 allClearButton.addEventListener("click", handleAllClear);
 clearButton.addEventListener("click", handleClear);
 negateButton.addEventListener("click", handleNegate);
+window.addEventListener("keydown", handleKeyBoardEvent);
 /****************************************/
